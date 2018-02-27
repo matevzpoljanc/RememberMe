@@ -7,7 +7,7 @@ module IrminHashTbl = Memo_result.MemoResult(Irmin_fs.AO(Git_unix.FS.IO))(Irmin_
 
 let (>>=) = Lwt.bind
 
-let m = Lwt_main.run (IrminHashTbl.create @@ Irmin_fs.config ~root:"db" () )
+(* let m = Lwt_main.run (IrminHashTbl.create @@ Irmin_fs.config ~root:"tmp_db" () ) *)
 
 let memoize (type a) (type b) m (f:a -> b): a -> b =
   let f_id = new_function_id () in
@@ -36,6 +36,7 @@ let memoize4 (type a) (type b) (type c) (type d) (type e) m (f:a -> b -> c -> d 
     Lwt_main.run @@ IrminHashTbl.find_or_add m (f_id, x0, x1, x2, x3) ~default:(fun () -> (f x0 x1 x2 x3)) in
   g
   ;;
+(* 
 let double = memoize m (fun x -> x*2);;
 let int_of_bool b = if b then 1 else 0;;
 
@@ -48,3 +49,4 @@ assert (double 1 = 2);
 assert (m_int true = 1);
 assert (double 4 = 8);
 assert (m_string_of_int 1 = "1")
+*)
