@@ -1,12 +1,21 @@
 open RememberMe
+open OUnit2
 
-let config = Irmin_git.config ~root:"db1" ()
+let config = Irmin_git.config ~root:"db" ()
 
-let add2 x = x+2
-let m_add2 = memoize (IrminFs config) (fun x -> add2 x)
-let m_add = memoize2 (IrminFs config) (fun x y -> x+y)
+let add1 x = x+1
+let test_add1_local test_ctx = assert_equal 3 @@ (memoize LocalHashTbl add1) 2
+let test_add1_global test_ctx = assert_equal 3 @@ (memoize GlobalHashTbl add1) 2
+let test_add1_mem test_ctx = assert_equal 3 @@ (memoize IrminMem add1) 2
+let test_add1_fs test_ctx = assert_equal 3 @@ (memoize (IrminFs config) add1) 2
+let suite = 
+    "suite" >:::
+    [
+        "test_add1_local">::test_add1_local;
+        "test_add1_global">::test_add1_global;
+        "test_add1_mem">::test_add1_mem;
+        "test_add1_fs">::test_add1_fs
+    ]
 
 let () =
-    print_endline @@ string_of_int @@ m_add 2 4;
-    print_endline @@ string_of_int @@ m_add2 5;
-    print_endline @@ string_of_int @@ m_add2 8;
+    run_test_tt_main suite
