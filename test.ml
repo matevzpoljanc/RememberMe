@@ -1,6 +1,6 @@
 open RememberMe
 
-let config = Irmin_git.config ~root:"db" ()
+let config = Irmin_git.config ~root:"db1" ()
 
 let add2 x = x+2
 let m_add2 = memoize (IrminFs config) (fun x -> add2 x)
