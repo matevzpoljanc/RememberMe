@@ -6,5 +6,8 @@ default:
 install:
 	jbuilder install $(INSTALL_ARGS)
 
-test:
+testAll:
+	jbuilder build @install
+	jbuilder install $(INSTALL_ARGS)
 	jbuilder build "test/test.exe"
+	./_build/default/test/test.exe
