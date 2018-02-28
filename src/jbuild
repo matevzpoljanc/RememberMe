@@ -1,0 +1,8 @@
+(library
+ ((name rememberMe)
+  (public_name rememberMe)
+  (libraries (core ezirmin))
+))
+
+
+(jbuild_version 1)

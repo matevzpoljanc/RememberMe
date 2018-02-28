@@ -1,6 +1,6 @@
 (executable
  ((name test)
-  (libraries (oUnit core ezirmin)))
+  (libraries (rememberMe oUnit core ezirmin)))
 )
 
 

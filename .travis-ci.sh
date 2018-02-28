@@ -21,5 +21,8 @@ eval `opam config env`
 #ocamlfind list
 
 make
+make install
 
-_build/default/test.exe
+jbuilder build test/test.exe
+
+_build/default/test/test.exe
