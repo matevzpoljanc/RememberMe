@@ -1,6 +1,6 @@
 
 # Edit this for your own project dependencies
-OPAM_DEPENDS="jbuilder ounit core ezirmin"
+OPAM_DEPENDS="opam-installer jbuilder ounit core ezirmin"
 	 
 # echo "yes" | sudo add-apt-repository ppa:avsm/ppa
 
