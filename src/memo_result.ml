@@ -5,12 +5,13 @@ module MemoResult(AO:Irmin.AO_MAKER)(RW:Irmin.RW_MAKER) = struct
     module AO = AO(Irmin.Hash.SHA1)(Tc.String)
     exception VauleNotFoundInRW
     exception ValueNotFoundInAO
+    exception FunctionNotAllowedToBeCalled
     module Key = struct
         include Tc.String
         let to_hum t = match Ezjsonm.decode_string (to_json t) with
-            | Some s -> s
+            | Some s -> string_of_int @@ Hashtbl.hash s
             | None -> raise (Ezjsonm.Parse_error ((to_json t), "Invalid arguments" ))
-        let of_hum s = of_json (Ezjsonm.from_string s)
+        let of_hum s = raise FunctionNotAllowedToBeCalled; of_json (Ezjsonm.from_string s)
     end
 
     module RW = RW(Key)(Irmin.Hash.SHA1)
