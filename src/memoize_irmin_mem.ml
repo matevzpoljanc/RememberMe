@@ -36,7 +36,7 @@ let memoize4 (type a) (type b) (type c) (type d) (type e) (f:a -> b -> c -> d ->
     Lwt_main.run @@ IrminHashTbl.find_or_add m (f_id, x0, x1, x2, x3) ~default:(fun () -> (f x0 x1 x2 x3)) in
   g
   ;;
-let double = memoize(fun x -> x*2);;
+let double = memoize (fun x -> x*2);;
 let int_of_bool b = if b then 1 else 0;;
 
 let m_int = memoize int_of_bool;;
