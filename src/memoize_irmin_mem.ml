@@ -12,7 +12,9 @@ let m = Lwt_main.run (IrminHashTbl.create @@ Irmin_git.config ())
 let memoize (type a) (type b) (f:a -> b): a -> b =
   let f_id = new_function_id () in
   let g x =
-    Lwt_main.run @@ IrminHashTbl.find_or_add m (f_id,x) ~default:(fun () -> (f x)) in
+    let result = Lwt_main.run @@ IrminHashTbl.find_or_add m (f_id,x) ~default:(fun () -> (f x)) in 
+    (*Printf.printf "Address Irmin: %d\n" (2 * Obj.magic result);*) result
+     in
   g
   ;;
 

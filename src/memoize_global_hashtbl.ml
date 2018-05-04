@@ -1,10 +1,12 @@
 open Core_kernel
 
-let table1 = Hashtbl.Poly.create ()
-let table2 = Hashtbl.Poly.create ()
-let table3 = Hashtbl.Poly.create ()
-let table4 = Hashtbl.Poly.create ()
+let table1 = Hashtbl.Poly.create () (* ~size:100_000 ~growth_allowed:false *)
+let table2 = Hashtbl.Poly.create () (* ~size:100_000 ~growth_allowed:false *)
+let table3 = Hashtbl.Poly.create () (* ~size:100_000 ~growth_allowed:false *)
+let table4 = Hashtbl.Poly.create () (* ~size:100_000 ~growth_allowed:false *)
+
 let counter = ref 0
+
 let new_function_id () = 
   let count= !counter in 
       counter := count + 1; count
@@ -12,7 +14,7 @@ let memoize (type a) (type b) (f : a -> b) : a -> b =
   let f_id = new_function_id () in
   let g x =
     let result = Hashtbl.find_or_add table1 (f_id, Obj.repr x) ~default:(fun () -> Obj.repr (f x)) in
-    Obj.obj result
+    (*Printf.printf "Address: %d\n" (2 * Obj.magic result ); *) Obj.obj result
     in
   g
   ;;

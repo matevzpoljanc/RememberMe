@@ -31,20 +31,20 @@ end = struct
         Lwt.return {table_rw = rw_t; table_ao = ao_t}
 
     (* Use Marshal module to provide polymorphism keys and values *)
-    let find t key = RW.read t.table_rw (Marshal.to_string key []) >>= 
+    let find t key = RW.read t.table_rw (Marshal.to_string key [Marshal.Closures]) >>= 
         function None -> raise VauleNotFoundInRW
-            |(Some ao_key) -> AO.read t.table_ao ao_key >>= 
+            |(Some ao_key) -> (*Printf.printf "%s\n" @@ Irmin.Hash.SHA1.to_hum ao_key ;*) AO.read t.table_ao ao_key >>= 
                 function None -> raise ValueNotFoundInAO
-                    | Some v -> Lwt.return (Marshal.from_string v 0)
-    let insert t key value = AO.add t.table_ao (Marshal.to_string value []) >>= fun k ->
-        RW.update t.table_rw (Marshal.to_string key []) k
+                    | Some v -> (*Printf.printf "Unmarshalled address Irmin: %d\n" (2 * Obj.magic v) ;*)Lwt.return (Marshal.from_string v 0)
+
+    let insert t key value = AO.add t.table_ao (Marshal.to_string value [Marshal.Closures]) >>= fun k ->
+        RW.update t.table_rw (Marshal.to_string key [Marshal.Closures]) k
     
     let find_or_add t key ~default = 
-        let s_key = Marshal.to_string key [] in 
+        let s_key = Marshal.to_string key [Marshal.Closures] in 
         RW.read t.table_rw s_key >>=
         function None -> 
             let value =  default () in
-             insert t s_key (Marshal.to_string value []) >>= fun () -> Lwt.return value
+             insert t key value >>= fun () -> find t key
         | Some _ -> find t key
 end
-
